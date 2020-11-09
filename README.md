@@ -9,6 +9,7 @@
 ## General info
 
 gitstatus.lua is a neovim plugin to make the "git status" command interactive via a floating window.
+![Gitstatus.lua demo](./demo/Gitstatus.gif)
 
 ## Technologies
 
