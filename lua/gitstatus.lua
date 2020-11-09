@@ -19,11 +19,11 @@ local function open_window()
 
 	--set buffer mappings
 	local mappingOpts = {noremap = true, silent = true }
-	api.nvim_buf_set_keymap(buffer, 'n', 'a', ':lua require("nvim-gitstatus").gitstatus.stage()<cr>', mappingOpts)
-	api.nvim_buf_set_keymap(buffer, 'n', 'u', ':lua require("nvim-gitstatus").gitstatus.unstage()<cr>', mappingOpts)
-	api.nvim_buf_set_keymap(buffer, 'n', 'c', ':lua require("nvim-gitstatus").gitstatus.commit()<cr>', mappingOpts)
-	api.nvim_buf_set_keymap(buffer, 'n', 'i', ':lua require("nvim-gitstatus").gitstatus.ignore()<cr>', mappingOpts)
-	api.nvim_buf_set_keymap(buffer, 'n', 'r', ':lua require("nvim-gitstatus").gitstatus.remove()<cr>', mappingOpts)
+	api.nvim_buf_set_keymap(buffer, 'n', 'a', ':silent lua require\'gitstatus\'.gitstatus.stage()<cr>', mappingOpts)
+	api.nvim_buf_set_keymap(buffer, 'n', 'u', ':silent lua require\'gitstatus\'.gitstatus.unstage()<cr>', mappingOpts)
+	api.nvim_buf_set_keymap(buffer, 'n', 'c', ':lua require\'gitstatus\'.gitstatus.commit()<cr>', mappingOpts)
+	api.nvim_buf_set_keymap(buffer, 'n', 'i', ':silent lua require\'gitstatus\'.gitstatus.ignore()<cr>', mappingOpts)
+	api.nvim_buf_set_keymap(buffer, 'n', 'r', ':silent lua require\'gitstatus\'.gitstatus.remove()<cr>', mappingOpts)
 
 	-- get dimensions
 	local width = api.nvim_get_option("columns")
@@ -71,7 +71,7 @@ local function open_window()
 	local border_window = api.nvim_open_win(border_buffer, true, border_opts)
 	window = api.nvim_open_win(buffer, true, opts)
 	api.nvim_command('au BufWipeout <buffer> exe "silent bwipeout! "'..border_buffer)
-	api.nvim_command('au BufWipeout <buffer> lua require("nvim-gitstatus").gitstatus.restore()')
+	api.nvim_command('au BufWipeout <buffer> :silent lua require\'gitstatus\'.gitstatus.restore()')
 
 	--highlight current line
 	api.nvim_win_set_option(window, 'cursorline', true)
@@ -88,7 +88,21 @@ local function validate_path(path)
 	return result
 end
 
+function gitstatus.stage()
+	api.nvim_command("normal! $")
+	local file = fn.expand("<cWORD>")
+	local line = api.nvim_get_current_line()
+	if validate_path(file) == true then
+		api.nvim_command("Git add "..file)
+		gitstatus.update_view(0)
+	elseif fn.match(line, "supprimé") ~= -1 then
+		api.nvim_command("Git add "..file)
+		gitstatus.update_view(0)
+	end
+end
+
 function gitstatus.unstage()
+	api.nvim_command("normal! $")
 	local file = fn.expand("<cWORD>")
 	if validate_path(file) == true then
 		api.nvim_command("Git restore --staged "..file)
@@ -98,6 +112,7 @@ function gitstatus.unstage()
 end
 
 function gitstatus.ignore()
+	api.nvim_command("normal! $")
 	local file = fn.expand("<cWORD>")
 	local command = "echo " .. file .. " >> .gitignore"
 	if (validate_path(file) == true and validate_path(".gitignore")) or validate_path(".git") then
@@ -110,20 +125,13 @@ function gitstatus.ignore()
 end
 
 function gitstatus.remove()
+	api.nvim_command("normal! $")
 	local file = fn.expand("<cWORD>")
 	if validate_path(file) == true then
 		print("Trying to remove: " .. file)
 		api.nvim_command("Git rm -f "..file)
 		gitstatus.update_view(0)
 		api.nvim_command("noh")
-	end
-end
-
-function gitstatus.stage()
-	local file = fn.expand("<cWORD>")
-	if validate_path(file) == true then
-		api.nvim_command("Git add "..file)
-		gitstatus.update_view(0)
 	end
 end
 
