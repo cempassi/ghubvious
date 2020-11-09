@@ -21,6 +21,7 @@ local function open_window()
 	local mappingOpts = {noremap = true, silent = true }
 	api.nvim_buf_set_keymap(buffer, 'n', 'a', ':lua require("nvim-gitstatus").gitstatus.stage()<cr>', mappingOpts)
 	api.nvim_buf_set_keymap(buffer, 'n', 'u', ':lua require("nvim-gitstatus").gitstatus.unstage()<cr>', mappingOpts)
+	api.nvim_buf_set_keymap(buffer, 'n', 'c', ':lua require("nvim-gitstatus").gitstatus.commit()<cr>', mappingOpts)
 	api.nvim_buf_set_keymap(buffer, 'n', '<Plug>GitstatusRemove', ':call gitstatus#Remove', mappingOpts)
 
 	-- get dimensions
@@ -107,6 +108,11 @@ function gitstatus.stage()
 	end
 end
 
+function gitstatus.commit()
+	gitstatus.close_window()
+	fn.jobstart("GIT_EDITOR=\"nvr --remote-wait -cc \"vsplit\"\" git commit")
+end
+
 function gitstatus.update_view(direction)
 	position = position + direction
 	cursor = api.nvim_win_get_cursor(window)
@@ -132,6 +138,7 @@ function gitstatus.update_view(direction)
 	--set file as non modifiable
 	api.nvim_buf_set_option(buffer, 'modifiable', false)
 	api.nvim_win_set_cursor(window, cursor)
+	api.nvim_command("")
 end
 
 local function save_previous()
@@ -155,7 +162,6 @@ function gitstatus.gitstatus()
 end
 
 function gitstatus.toggle()
-	last_pos = api.nvim_win_get_cursor(0)
 	if fn.bufexists("gitstatus") == 1 then
 		gitstatus.close_window()
 	else

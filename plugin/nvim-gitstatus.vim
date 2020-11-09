@@ -1,6 +1,5 @@
 function! NvimGitstatus()
 	lua for k in pairs(package.loaded) do if k:match("^nvim%-gitstatus") then package.loaded[k] = nil end end
-	lua require("nvim-gitstatus").gitstatus.gitstatus()
 endfunction
 
 augroup nvim-gitstatus
