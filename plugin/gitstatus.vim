@@ -6,8 +6,8 @@ augroup gitstatus
 	autocmd!
 augroup END
 
-nnoremap <Plug>GitstatusOpen 	:lua require'gitstatus'.gitstatus.gitstatus()<cr>
-nnoremap <Plug>GitstatusToggle 	:lua require'gitstatus'.gitstatus.toggle()<cr>
+nnoremap <Plug>GitstatusOpen 	:lua require'gitstatus'.gitstatus()<cr>
+nnoremap <Plug>GitstatusToggle 	:lua require'gitstatus'.toggle()<cr>
 
 map <leader>gg <Plug>GitstatusToggle
 map <leader>gr :call GitstatusReload()<cr>

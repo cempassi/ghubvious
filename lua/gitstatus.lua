@@ -19,11 +19,11 @@ local function open_window()
 
 	--set buffer mappings
 	local mappingOpts = {noremap = true, silent = true }
-	api.nvim_buf_set_keymap(buffer, 'n', 'a', ':silent lua require\'gitstatus\'.gitstatus.stage()<cr>', mappingOpts)
-	api.nvim_buf_set_keymap(buffer, 'n', 'u', ':silent lua require\'gitstatus\'.gitstatus.unstage()<cr>', mappingOpts)
-	api.nvim_buf_set_keymap(buffer, 'n', 'c', ':lua require\'gitstatus\'.gitstatus.commit()<cr>', mappingOpts)
-	api.nvim_buf_set_keymap(buffer, 'n', 'i', ':silent lua require\'gitstatus\'.gitstatus.ignore()<cr>', mappingOpts)
-	api.nvim_buf_set_keymap(buffer, 'n', 'r', ':silent lua require\'gitstatus\'.gitstatus.remove()<cr>', mappingOpts)
+	api.nvim_buf_set_keymap(buffer, 'n', 'a', ':silent lua require\'gitstatus\'.stage()<cr>', mappingOpts)
+	api.nvim_buf_set_keymap(buffer, 'n', 'u', ':silent lua require\'gitstatus\'.unstage()<cr>', mappingOpts)
+	api.nvim_buf_set_keymap(buffer, 'n', 'c', ':lua require\'gitstatus\'.commit()<cr>', mappingOpts)
+	api.nvim_buf_set_keymap(buffer, 'n', 'i', ':silent lua require\'gitstatus\'.ignore()<cr>', mappingOpts)
+	api.nvim_buf_set_keymap(buffer, 'n', 'r', ':silent lua require\'gitstatus\'.remove()<cr>', mappingOpts)
 
 	-- get dimensions
 	local width = api.nvim_get_option("columns")
@@ -71,7 +71,7 @@ local function open_window()
 	local border_window = api.nvim_open_win(border_buffer, true, border_opts)
 	window = api.nvim_open_win(buffer, true, opts)
 	api.nvim_command('au BufWipeout <buffer> exe "silent bwipeout! "'..border_buffer)
-	api.nvim_command('au BufWipeout <buffer> :silent lua require\'gitstatus\'.gitstatus.restore()')
+	api.nvim_command('au BufWipeout <buffer> :silent lua require\'gitstatus\'.restore()')
 
 	--highlight current line
 	api.nvim_win_set_option(window, 'cursorline', true)
@@ -138,7 +138,8 @@ end
 
 function gitstatus.commit()
 	gitstatus.close_window()
-	fn.jobstart("GIT_EDITOR=\"nvr --remote-wait -cc \"vsplit\"\" git commit")
+	fn.execute('let $GIT_EDITOR="nvr --remote-wait -cc vsplit"')
+	fn.execute("Git commit")
 end
 
 function gitstatus.update_view(direction)
@@ -200,6 +201,4 @@ function gitstatus.toggle()
 	end
 end
 
-return {
-	gitstatus = gitstatus
-}
+return gitstatus
