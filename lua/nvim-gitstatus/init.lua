@@ -22,15 +22,16 @@ local function open_window()
 	api.nvim_buf_set_keymap(buffer, 'n', 'a', ':lua require("nvim-gitstatus").gitstatus.stage()<cr>', mappingOpts)
 	api.nvim_buf_set_keymap(buffer, 'n', 'u', ':lua require("nvim-gitstatus").gitstatus.unstage()<cr>', mappingOpts)
 	api.nvim_buf_set_keymap(buffer, 'n', 'c', ':lua require("nvim-gitstatus").gitstatus.commit()<cr>', mappingOpts)
-	api.nvim_buf_set_keymap(buffer, 'n', '<Plug>GitstatusRemove', ':call gitstatus#Remove', mappingOpts)
+	api.nvim_buf_set_keymap(buffer, 'n', 'i', ':lua require("nvim-gitstatus").gitstatus.ignore()<cr>', mappingOpts)
+	api.nvim_buf_set_keymap(buffer, 'n', 'r', ':lua require("nvim-gitstatus").gitstatus.remove()<cr>', mappingOpts)
 
 	-- get dimensions
 	local width = api.nvim_get_option("columns")
 	local height = api.nvim_get_option("lines")
 
 	-- calculate our floating window size
-	local win_height = math.ceil(height * 0.8 - 4)
-	local win_width = math.ceil(width * 0.8)
+	local win_height = math.ceil(height * 0.5 - 4)
+	local win_width = math.ceil(width * 0.5)
 
 	-- and its starting position
 	local row = math.ceil((height - win_height) / 2 - 1)
@@ -93,8 +94,28 @@ function gitstatus.unstage()
 		api.nvim_command("Git restore --staged "..file)
 		gitstatus.update_view(0)
 		api.nvim_command("noh")
+	end
+end
+
+function gitstatus.ignore()
+	local file = fn.expand("<cWORD>")
+	local command = "echo " .. file .. " >> .gitignore"
+	if (validate_path(file) == true and validate_path(".gitignore")) or validate_path(".git") then
+		os.execute(command)
+		gitstatus.update_view(0)
+		api.nvim_command("noh")
 	else
-		print("Je match pas")
+		print("Ignore only works in root directory")
+	end
+end
+
+function gitstatus.remove()
+	local file = fn.expand("<cWORD>")
+	if validate_path(file) == true then
+		print("Trying to remove: " .. file)
+		api.nvim_command("Git rm -f "..file)
+		gitstatus.update_view(0)
+		api.nvim_command("noh")
 	end
 end
 
@@ -103,8 +124,6 @@ function gitstatus.stage()
 	if validate_path(file) == true then
 		api.nvim_command("Git add "..file)
 		gitstatus.update_view(0)
-	else
-		print("Je match pas")
 	end
 end
 
@@ -146,6 +165,7 @@ local function save_previous()
 	previous_cursor = api.nvim_win_get_cursor(previous_window)
 end
 
+-- Restore cursor to previous position
 function gitstatus.restore()
 	api.nvim_set_current_win(previous_window)
 	api.nvim_win_set_cursor(previous_window, previous_cursor)
