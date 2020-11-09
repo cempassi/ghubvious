@@ -20,3 +20,4 @@ Project is created with:
 ## Setup
 
 To run this project, install it using your favorite git plugin manager.
+
