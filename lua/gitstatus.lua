@@ -1,4 +1,5 @@
-local gitstatus = {}
+local gitstatus = require('command')
+
 local api = vim.api
 local fn = vim.fn
 local buffer, window, cursor
@@ -78,69 +79,6 @@ local function open_window()
 	api.nvim_win_set_option(window, "winhighlight", "NormalFloat:Normal")
 end
 
-local function validate_path(path)
-	local result = false
-	if fn.isdirectory(path) == 1 then
-		result = true
-	elseif fn.filereadable(path) == 1 then
-		result = true
-	end
-	return result
-end
-
-function gitstatus.stage()
-	api.nvim_command("normal! $")
-	local file = fn.expand("<cWORD>")
-	local line = api.nvim_get_current_line()
-	if validate_path(file) == true then
-		api.nvim_command("Git add "..file)
-		gitstatus.update_view(0)
-	elseif fn.match(line, "supprimé") ~= -1 then
-		api.nvim_command("Git add "..file)
-		gitstatus.update_view(0)
-	end
-end
-
-function gitstatus.unstage()
-	api.nvim_command("normal! $")
-	local file = fn.expand("<cWORD>")
-	if validate_path(file) == true then
-		api.nvim_command("Git restore --staged "..file)
-		gitstatus.update_view(0)
-		api.nvim_command("noh")
-	end
-end
-
-function gitstatus.ignore()
-	api.nvim_command("normal! $")
-	local file = fn.expand("<cWORD>")
-	local command = "echo " .. file .. " >> .gitignore"
-	if (validate_path(file) == true and validate_path(".gitignore")) or validate_path(".git") then
-		os.execute(command)
-
-		gitstatus.update_view(0)
-		api.nvim_command("noh")
-	else
-		print("Ignore only works in root directory")
-	end
-end
-
-function gitstatus.remove()
-	api.nvim_command("normal! $")
-	local file = fn.expand("<cWORD>")
-	if validate_path(file) == true then
-		print("Trying to remove: " .. file)
-		api.nvim_command("Git rm -f "..file)
-		gitstatus.update_view(0)
-		api.nvim_command("noh")
-	end
-end
-
-function gitstatus.commit()
-	gitstatus.close_window()
-	fn.execute('let $GIT_EDITOR="nvr --remote-wait -cc vsplit"')
-	fn.execute("Git commit")
-end
 
 function gitstatus.update_view(direction)
 	position = position + direction
