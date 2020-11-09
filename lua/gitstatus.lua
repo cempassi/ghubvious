@@ -117,6 +117,7 @@ function gitstatus.ignore()
 	local command = "echo " .. file .. " >> .gitignore"
 	if (validate_path(file) == true and validate_path(".gitignore")) or validate_path(".git") then
 		os.execute(command)
+
 		gitstatus.update_view(0)
 		api.nvim_command("noh")
 	else
