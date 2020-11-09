@@ -20,11 +20,17 @@ local function open_window()
 
 	--set buffer mappings
 	local mappingOpts = {noremap = true, silent = true }
-	api.nvim_buf_set_keymap(buffer, 'n', 'a', ':silent lua require\'gitstatus\'.stage()<cr>', mappingOpts)
-	api.nvim_buf_set_keymap(buffer, 'n', 'u', ':silent lua require\'gitstatus\'.unstage()<cr>', mappingOpts)
-	api.nvim_buf_set_keymap(buffer, 'n', 'c', ':lua require\'gitstatus\'.commit()<cr>', mappingOpts)
-	api.nvim_buf_set_keymap(buffer, 'n', 'i', ':silent lua require\'gitstatus\'.ignore()<cr>', mappingOpts)
-	api.nvim_buf_set_keymap(buffer, 'n', 'r', ':silent lua require\'gitstatus\'.remove()<cr>', mappingOpts)
+	api.nvim_buf_set_keymap(buffer, 'n', '<Plug>GitstatusStage', ':lua require\'gitstatus\'.stage()<cr>', mappingOpts)
+	api.nvim_buf_set_keymap(buffer, 'n', '<Plug>GitstatusUnstage', ':lua require\'gitstatus\'.unstage()<cr>', mappingOpts)
+	api.nvim_buf_set_keymap(buffer, 'n', '<Plug>GitstatusCommit', ':lua require\'gitstatus\'.commit()<cr>', mappingOpts)
+	api.nvim_buf_set_keymap(buffer, 'n', '<Plug>GitstatusIgnore', ':lua require\'gitstatus\'.ignore()<cr>', mappingOpts)
+	api.nvim_buf_set_keymap(buffer, 'n', '<Plug>GitstatusRemove', ':lua require\'gitstatus\'.remove()<cr>', mappingOpts)
+
+	api.nvim_buf_set_keymap(buffer, 'n', 'a', '<Plug>GitstatusStage', {})
+	api.nvim_buf_set_keymap(buffer, 'n', 'u', '<Plug>GitstatusUnstage', {})
+	api.nvim_buf_set_keymap(buffer, 'n', 'c', '<Plug>GitstatusCommit', {})
+	api.nvim_buf_set_keymap(buffer, 'n', 'i', '<Plug>GitstatusIgnor', {})
+	api.nvim_buf_set_keymap(buffer, 'n', 'r', '<Plug>GitstatusRemov', {})
 
 	-- get dimensions
 	local width = api.nvim_get_option("columns")
