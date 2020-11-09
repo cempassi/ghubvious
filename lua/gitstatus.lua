@@ -79,7 +79,6 @@ local function open_window()
 	api.nvim_win_set_option(window, "winhighlight", "NormalFloat:Normal")
 end
 
-
 function gitstatus.update_view(direction)
 	position = position + direction
 	cursor = api.nvim_win_get_cursor(window)
