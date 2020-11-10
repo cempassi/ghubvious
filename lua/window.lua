@@ -1,4 +1,5 @@
 local window = {}
+local job = require('job')
 local api = vim.api
 local fn = vim.fn
 local current, buffer, border, cursor
@@ -22,6 +23,7 @@ local function create_buffer()
 	api.nvim_buf_set_keymap(buffer, 'n', '<Plug>GitstatusCommit', ':lua require\'gitstatus\'.commit()<cr>', mappingOpts)
 	api.nvim_buf_set_keymap(buffer, 'n', '<Plug>GitstatusIgnore', ':lua require\'gitstatus\'.ignore()<cr>', mappingOpts)
 	api.nvim_buf_set_keymap(buffer, 'n', '<Plug>GitstatusRemove', ':lua require\'gitstatus\'.remove()<cr>', mappingOpts)
+	api.nvim_buf_set_keymap(buffer, 'n', 'h', ':lua require\'gitstatus\'.job.history()<cr>', mappingOpts)
 
 	api.nvim_buf_set_keymap(buffer, 'n', 'a', '<Plug>GitstatusStage', {})
 	api.nvim_buf_set_keymap(buffer, 'n', 'u', '<Plug>GitstatusUnstage', {})
@@ -123,6 +125,11 @@ function window.update(direction)
 	api.nvim_buf_set_option(buffer, 'modifiable', false)
 	api.nvim_win_set_cursor(current, cursor)
 	api.nvim_command("")
+end
+
+function window.close()
+	job.stop()
+	api.nvim_win_close(window, true)
 end
 
 return window

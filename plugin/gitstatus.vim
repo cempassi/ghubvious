@@ -2,6 +2,10 @@ function! GitstatusReload()
 	lua for k in pairs(package.loaded) do if k:match("^gitstatus") then package.loaded[k] = nil end end
 endfunction
 
+function! gitstatus#handler(job_id, data, event)
+	lua require'gitstatus'.job.handler(data, event)
+endfunction
+
 augroup gitstatus
 	autocmd!
 augroup END

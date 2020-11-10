@@ -1,4 +1,7 @@
 local command = {}
+local job = require('job')
+
+local window = require('window')
 local api = vim.api
 local fn = vim.fn
 
@@ -17,11 +20,11 @@ function command.stage()
 	local file = fn.expand("<cWORD>")
 	local line = api.nvim_get_current_line()
 	if validate_path(file) == true then
-		api.nvim_command("Git add "..file)
-		command.update_view(0)
+		job.send("git add " .. file)
+		window.update(0)
 	elseif fn.match(line, "supprimé") ~= -1 then
-		api.nvim_command("Git add "..file)
-		command.update_view(0)
+		job.send("git add " .. file)
+		window.update(0)
 	end
 end
 
@@ -29,8 +32,8 @@ function command.unstage()
 	api.nvim_command("normal! $")
 	local file = fn.expand("<cWORD>")
 	if validate_path(file) == true then
-		api.nvim_command("Git restore --staged "..file)
-		command.update_view(0)
+		job.send("git restore --staged "..file)
+		window.update(0)
 		api.nvim_command("noh")
 	end
 end
@@ -40,9 +43,8 @@ function command.ignore()
 	local file = fn.expand("<cWORD>")
 	local append = "echo " .. file .. " >> .gitignore"
 	if (validate_path(file) == true and validate_path(".gitignore")) or validate_path(".git") then
-		os.execute(append)
-
-		command.update_view(0)
+		job.send(append)
+		window.update(0)
 		api.nvim_command("noh")
 	else
 		print("Ignore only works in root directory")
@@ -54,16 +56,15 @@ function command.remove()
 	local file = fn.expand("<cWORD>")
 	if validate_path(file) == true then
 		print("Trying to remove: " .. file)
-		api.nvim_command("Git rm -f "..file)
-		command.update_view(0)
+		job.send("git rm -f "..file)
+		window.update(0)
 		api.nvim_command("noh")
 	end
 end
 
 function command.commit()
-	command.close_window()
-	fn.execute('let $GIT_EDITOR="nvr --remote-wait -cc vsplit"')
-	fn.execute("Git commit")
+	window.close()
+	job.send('GIT_EDITOR="nvr --remote-wait -cc vsplit" git commit')
 end
 
 return command
