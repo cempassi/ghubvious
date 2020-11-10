@@ -58,14 +58,15 @@ function command.remove()
 end
 
 function command.commit(opt)
-	local cmd = 'GIT_EDITOR="nvr --remote-wait -cc vsplit" git commit '
+	local escape = [[nvr --remote-send '<c-\><c-N><c-w><c-p>:q<cr>:q<cr>' ]]
+	local cmd = [[git commit ]]
 	if opt == "amend" then
-		cmd = cmd .. "--amend"
+		cmd = cmd .. "--amend "
 	elseif cmd == "noedit" then
-		cmd = cmd .. "--amend --noedit"
+		cmd = cmd .. "--amend --no-edit"
 	end
-	window.close()
-	job.send(cmd)
+	job.report(escape .. " && " .. cmd)
+	-- window.background()
 end
 
 return command

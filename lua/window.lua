@@ -20,7 +20,7 @@ local function create_buffer()
 	local mappingOpts = {noremap = true, silent = true }
 	api.nvim_buf_set_keymap(buffer, 'n', '<Plug>GitstatusStage', ':lua require\'gitstatus\'.stage()<cr>', mappingOpts)
 	api.nvim_buf_set_keymap(buffer, 'n', '<Plug>GitstatusUnstage', ':lua require\'gitstatus\'.unstage()<cr>', mappingOpts)
-	api.nvim_buf_set_keymap(buffer, 'n', '<Plug>GitstatusCommit', ':lua require\'gitstatus\'.commit()<cr>', mappingOpts)
+	api.nvim_buf_set_keymap(buffer, 'n', '<Plug>GitstatusCommit', ':lua require\'gitstatus\'.commit("")<cr>', mappingOpts)
 	api.nvim_buf_set_keymap(buffer, 'n', '<Plug>GitstatusCommitAmend', ':lua require\'gitstatus\'.commit("amend")<cr>', mappingOpts)
 	api.nvim_buf_set_keymap(buffer, 'n', '<Plug>GitstatusCommitNoedit', ':lua require\'gitstatus\'.commit("noedit")<cr>', mappingOpts)
 	api.nvim_buf_set_keymap(buffer, 'n', '<Plug>GitstatusIgnore', ':lua require\'gitstatus\'.ignore()<cr>', mappingOpts)
@@ -97,6 +97,7 @@ function window.open()
 	current = api.nvim_open_win(buffer, true, opts.main)
 	api.nvim_command('au BufWipeout <buffer> exe "silent bwipeout! "'..border)
 	api.nvim_command('au BufWipeout <buffer> :silent lua require\'gitstatus\'.restore()')
+	api.nvim_command('autocmd FileType gitcommit,gitrebase,gitconfig set bufhidden=delete')
 
 	--highlight current line
 	api.nvim_win_set_option(current, 'cursorline', true)
@@ -121,6 +122,7 @@ function window.update(direction)
 	-- end
 
 	api.nvim_buf_set_lines(buffer, 0, -1, false, lines)
+	lines = nil
 	api.nvim_command('g/(.*/d')
 	api.nvim_command("noh")
 	api.nvim_command("normal! zR")
@@ -133,7 +135,10 @@ end
 
 function window.close()
 	job.stop()
-	api.nvim_del_var("gitstatuscapture")
+	api.nvim_win_close(window, true)
+end
+
+function window.background()
 	api.nvim_win_close(window, true)
 end
 
