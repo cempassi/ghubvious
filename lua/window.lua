@@ -97,7 +97,6 @@ function window.open()
 	current = api.nvim_open_win(buffer, true, opts.main)
 	api.nvim_command('au BufWipeout <buffer> exe "silent bwipeout! "'..border)
 	api.nvim_command('au BufWipeout <buffer> :silent lua require\'gitstatus\'.restore()')
-	api.nvim_command('autocmd FileType gitcommit,gitrebase,gitconfig set bufhidden=delete')
 
 	--highlight current line
 	api.nvim_win_set_option(current, 'cursorline', true)

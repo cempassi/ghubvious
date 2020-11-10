@@ -1,23 +1,23 @@
-function! GitstatusReload()
-	lua for k in pairs(package.loaded) do if k:match("^gitstatus") then package.loaded[k] = nil end end
-endfunction
+" in plugin/whid.vim
+if exists('g:loaded_gitstatus') | finish | endif " prevent loading file twice
 
-function! gitstatus#handler(job_id, data, event)
-	let g:gitstatusdata = a:data
-	let g:gitstatusevent = a:event
-	lua require'gitstatus'.job.handler()
-endfunction
-
-function! gitstatus#update()
-	lua require'gitstatus'.update(0)
-endfunction
+let s:save_cpo = &cpo " save user coptions
+set cpo&vim " reset them to defaults
 
 augroup gitstatus
 	autocmd!
+	autocmd FileType gitcommit,gitrebase,gitconfig set bufhidden=delete
 augroup END
 
 nnoremap <Plug>GitstatusOpen 	:lua require'gitstatus'.gitstatus()<cr>
 nnoremap <Plug>GitstatusToggle 	:lua require'gitstatus'.toggle()<cr>
 
 map <leader>gg <Plug>GitstatusToggle
-map <leader>gr :call GitstatusReload()<cr>
+
+"Explicit plugin reload, for development
+map <leader>gr :call gitstatus#reload()<cr>
+
+let &cpo = s:save_cpo " and restore after
+unlet s:save_cpo
+
+let g:loaded_gitstatus = 1
