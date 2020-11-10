@@ -1,4 +1,4 @@
-local command = require('command')
+local commands = require('commands')
 local window = require('window')
 
 local gitstatus = {}
@@ -13,7 +13,7 @@ local function merge_table(dest, src)
 end
 
 local function merge_packages()
-	merge_table(gitstatus, command)
+	merge_table(gitstatus, commands)
 	return gitstatus
 end
 

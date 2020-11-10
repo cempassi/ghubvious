@@ -1,4 +1,4 @@
-local command = {}
+local commands = {}
 local job = require('job')
 
 local window = require('window')
@@ -15,7 +15,7 @@ local function validate_path(path)
 	return result
 end
 
-function command.stage()
+function commands.stage()
 	api.nvim_command("normal! $")
 	local file = fn.expand("<cWORD>")
 	local line = api.nvim_get_current_line()
@@ -26,7 +26,7 @@ function command.stage()
 	end
 end
 
-function command.unstage()
+function commands.unstage()
 	api.nvim_command("normal! $")
 	local file = fn.expand("<cWORD>")
 	if validate_path(file) == true then
@@ -35,7 +35,7 @@ function command.unstage()
 	end
 end
 
-function command.ignore()
+function commands.ignore()
 	api.nvim_command("normal! $")
 	local file = fn.expand("<cWORD>")
 	local append = "echo " .. file .. " >> .gitignore"
@@ -47,7 +47,7 @@ function command.ignore()
 	end
 end
 
-function command.remove()
+function commands.remove()
 	api.nvim_command("normal! $")
 	local file = fn.expand("<cWORD>")
 	if validate_path(file) == true then
@@ -57,7 +57,7 @@ function command.remove()
 	end
 end
 
-function command.commit(opt)
+function commands.commit(opt)
 	local escape = [[nvr --remote-send '<c-\><c-N><c-w><c-p>:q<cr>:q<cr>' ]]
 	local cmd = [[git commit ]]
 	if opt == "amend" then
@@ -69,4 +69,4 @@ function command.commit(opt)
 	-- window.background()
 end
 
-return command
+return commands

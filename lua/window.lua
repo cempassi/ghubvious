@@ -138,8 +138,4 @@ function window.close()
 	api.nvim_win_close(window, true)
 end
 
-function window.background()
-	api.nvim_win_close(window, true)
-end
-
 return window
