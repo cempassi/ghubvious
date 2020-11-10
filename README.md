@@ -22,9 +22,8 @@ Project is created with:
 ## Depedencies
 
 I plan to remove dependencies for this plugin to be fully standalone, but for
-now, this project requires those other plugins to work:
+now, this project requires this other plugins to work:
 
-- [vim-fugitive](https://github.com/tpope/vim-fugitive)
 - [neovim-remote](https://github.com/mhinz/neovim-remote)
 
 ## Setup
