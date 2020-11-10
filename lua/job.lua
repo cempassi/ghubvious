@@ -19,13 +19,27 @@ local function handle_stdout(data)
 		api.nvim_set_var("gitstatuscapture", 0)
 	elseif g.gitstatussuccess == 0 then
 		api.nvim_set_var("gitstatussuccess", 1)
+		api.nvim_out_write([[Status success:]])
+		for key, string in pairs(data) do
+			api.nvim_out_write(string)
+		end
 	elseif g.gitstatusreport == 1 then
-		vim.cmd([[echomsg "Dans le stdout pour status report"]])
-		for key, value in pairs(data) do
-			print(vim.inspect(value))
+		api.nvim_out_write([[Status success:]])
+		for key, string in pairs(data) do
+			api.nvim_out_write(string)
 		end
 		api.nvim_set_var("gitstatusreport", 0)
 	end
+end
+
+local function handle_stderr(data)
+	api.nvim_out_write([[Errors:]])
+	for key, string in pairs(data) do
+		api.nvim_err_write(string)
+	end
+	api.nvim_set_var("gitstatussuccess", 0)
+	api.nvim_set_var("gitstatusreport", 0)
+	api.nvim_set_var("gitstatuscapture", 0)
 end
 
 function job.handler()
@@ -35,13 +49,7 @@ function job.handler()
 	if event == "stdout" then
 		handle_stdout(data)
 	elseif event == "stderr" then
-		vim.cmd([[echomsg "Dans le stderror"]])
-		for key, value in pairs(data) do
-			vim.cmd('echomsg "' .. value .. '"')
-		end
-		api.nvim_set_var("gitstatussuccess", 0)
-		api.nvim_set_var("gitstatusreport", 0)
-		api.nvim_set_var("gitstatuscapture", 0)
+		handle_stderr(data)
 	else
 		vim.cmd([[echomsg "Le terminal a quité"]])
 	end
@@ -76,7 +84,6 @@ function job.history()
 		api.nvim_command('echom \"' .. command)
 	end
 end
-
 
 function job.capture(command)
 	api.nvim_set_var("gitstatuscapture", 1)
