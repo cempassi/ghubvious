@@ -34,6 +34,13 @@ function gitstatus.gitstatus()
 	window.update(0)
 end
 
+function gitstatus.update()
+	window.update(0)
+end
+function gitstatus.echo()
+	api.nvim_command('echo "It is working!"')
+end
+
 function gitstatus.toggle()
 	if fn.bufexists("gitstatus") == 1 then
 		window.close()

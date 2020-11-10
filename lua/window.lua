@@ -21,13 +21,17 @@ local function create_buffer()
 	api.nvim_buf_set_keymap(buffer, 'n', '<Plug>GitstatusStage', ':lua require\'gitstatus\'.stage()<cr>', mappingOpts)
 	api.nvim_buf_set_keymap(buffer, 'n', '<Plug>GitstatusUnstage', ':lua require\'gitstatus\'.unstage()<cr>', mappingOpts)
 	api.nvim_buf_set_keymap(buffer, 'n', '<Plug>GitstatusCommit', ':lua require\'gitstatus\'.commit()<cr>', mappingOpts)
+	api.nvim_buf_set_keymap(buffer, 'n', '<Plug>GitstatusCommitAmend', ':lua require\'gitstatus\'.commit("amend")<cr>', mappingOpts)
+	api.nvim_buf_set_keymap(buffer, 'n', '<Plug>GitstatusCommitNoedit', ':lua require\'gitstatus\'.commit("noedit")<cr>', mappingOpts)
 	api.nvim_buf_set_keymap(buffer, 'n', '<Plug>GitstatusIgnore', ':lua require\'gitstatus\'.ignore()<cr>', mappingOpts)
 	api.nvim_buf_set_keymap(buffer, 'n', '<Plug>GitstatusRemove', ':lua require\'gitstatus\'.remove()<cr>', mappingOpts)
 	api.nvim_buf_set_keymap(buffer, 'n', 'h', ':lua require\'gitstatus\'.job.history()<cr>', mappingOpts)
 
 	api.nvim_buf_set_keymap(buffer, 'n', 'a', '<Plug>GitstatusStage', {})
 	api.nvim_buf_set_keymap(buffer, 'n', 'u', '<Plug>GitstatusUnstage', {})
-	api.nvim_buf_set_keymap(buffer, 'n', 'c', '<Plug>GitstatusCommit', {})
+	api.nvim_buf_set_keymap(buffer, 'n', 'cm', '<Plug>GitstatusCommit', {})
+	api.nvim_buf_set_keymap(buffer, 'n', 'ca', '<Plug>GitstatusCommitAmend', {})
+	api.nvim_buf_set_keymap(buffer, 'n', 'ce', '<Plug>GitstatusCommitNoedit', {})
 	api.nvim_buf_set_keymap(buffer, 'n', 'i', '<Plug>GitstatusIgnor', {})
 	api.nvim_buf_set_keymap(buffer, 'n', 'r', '<Plug>GitstatusRemov', {})
 end
@@ -109,14 +113,14 @@ function window.update(direction)
 
 	-- we will use vim systemlist function which run shell
 	-- command and return result as list
-	local result = fn.systemlist('git status')
+	local lines = job.capture('git status')
 
 	-- with small indentation results will look better
-	for k, v in pairs(result) do
-		result[k] = '  '..result[k]
-	end
+	-- for k, v in pairs(lines) do
+	-- 	lines[k] = '  ' .. lines[k]
+	-- end
 
-	api.nvim_buf_set_lines(buffer, 0, -1, false, result)
+	api.nvim_buf_set_lines(buffer, 0, -1, false, lines)
 	api.nvim_command('g/(.*/d')
 	api.nvim_command("noh")
 	api.nvim_command("normal! zR")
@@ -129,6 +133,7 @@ end
 
 function window.close()
 	job.stop()
+	api.nvim_del_var("gitstatuscapture")
 	api.nvim_win_close(window, true)
 end
 
