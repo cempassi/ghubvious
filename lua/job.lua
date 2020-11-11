@@ -34,7 +34,6 @@ function job.start(command, args, action, ...)
 		stdout:close()
 		stderr:close()
 		handle:close()
-		print("J'ai deja quité")
 		if action ~= nil then action(unpack(cmdargs)) end
 	end
 	)

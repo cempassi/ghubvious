@@ -7,31 +7,31 @@ local function create_buffer()
 	buffer = api.nvim_create_buf(false, true) --create new buffer
 
 	--set buffer options
-	api.nvim_buf_set_name(buffer, "gitstatus")
-	api.nvim_buf_set_option(buffer, "filetype", "gitstatus")
-	api.nvim_buf_set_option(buffer, "syntax", "gitstatus")
+	api.nvim_buf_set_name(buffer, "ghubvious")
+	api.nvim_buf_set_option(buffer, "filetype", "ghubvious")
+	api.nvim_buf_set_option(buffer, "syntax", "ghubvious")
 	api.nvim_buf_set_option(buffer, 'swapfile', false)
 	api.nvim_buf_set_option(buffer, "buftype", "nofile")
 	api.nvim_buf_set_option(buffer, "bufhidden", "wipe")
 
 	--set buffer mappings
 	local mappingOpts = {noremap = true, silent = true }
-	api.nvim_buf_set_keymap(buffer, 'n', '<Plug>GitstatusStage', ':lua require\'gitstatus\'.stage()<cr>', mappingOpts)
-	api.nvim_buf_set_keymap(buffer, 'n', '<Plug>GitstatusUnstage', ':lua require\'gitstatus\'.unstage()<cr>', mappingOpts)
-	api.nvim_buf_set_keymap(buffer, 'n', '<Plug>GitstatusCommit', ':lua require\'gitstatus\'.commit()<cr>', mappingOpts)
-	api.nvim_buf_set_keymap(buffer, 'n', '<Plug>GitstatusCommitAmend', ':lua require\'gitstatus\'.commit("amend")<cr>', mappingOpts)
-	api.nvim_buf_set_keymap(buffer, 'n', '<Plug>GitstatusCommitNoedit', ':lua require\'gitstatus\'.commit("noedit")<cr>', mappingOpts)
-	api.nvim_buf_set_keymap(buffer, 'n', '<Plug>GitstatusIgnore', ':lua require\'gitstatus\'.ignore()<cr>', mappingOpts)
-	api.nvim_buf_set_keymap(buffer, 'n', '<Plug>GitstatusRemove', ':lua require\'gitstatus\'.remove()<cr>', mappingOpts)
-	api.nvim_buf_set_keymap(buffer, 'n', 'h', ':lua require\'gitstatus\'.job.history()<cr>', mappingOpts)
+	api.nvim_buf_set_keymap(buffer, 'n', '<Plug>GhubviousStage', ':lua require\'ghubvious\'.stage()<cr>', mappingOpts)
+	api.nvim_buf_set_keymap(buffer, 'n', '<Plug>GhubviousUnstage', ':lua require\'ghubvious\'.unstage()<cr>', mappingOpts)
+	api.nvim_buf_set_keymap(buffer, 'n', '<Plug>GhubviousCommit', ':lua require\'ghubvious\'.commit()<cr>', mappingOpts)
+	api.nvim_buf_set_keymap(buffer, 'n', '<Plug>GhubviousCommitAmend', ':lua require\'ghubvious\'.commit("amend")<cr>', mappingOpts)
+	api.nvim_buf_set_keymap(buffer, 'n', '<Plug>GhubviousCommitNoedit', ':lua require\'ghubvious\'.commit("noedit")<cr>', mappingOpts)
+	api.nvim_buf_set_keymap(buffer, 'n', '<Plug>GhubviousIgnore', ':lua require\'ghubvious\'.ignore()<cr>', mappingOpts)
+	api.nvim_buf_set_keymap(buffer, 'n', '<Plug>GhubviousRemove', ':lua require\'ghubvious\'.remove()<cr>', mappingOpts)
+	api.nvim_buf_set_keymap(buffer, 'n', 'h', ':lua require\'ghubvious\'.job.history()<cr>', mappingOpts)
 
-	api.nvim_buf_set_keymap(buffer, 'n', 'a', '<Plug>GitstatusStage', {})
-	api.nvim_buf_set_keymap(buffer, 'n', 'u', '<Plug>GitstatusUnstage', {})
-	api.nvim_buf_set_keymap(buffer, 'n', 'c', '<Plug>GitstatusCommit', {})
-	--api.nvim_buf_set_keymap(buffer, 'n', 'ca', '<Plug>GitstatusCommitAmend', {})
-	--api.nvim_buf_set_keymap(buffer, 'n', 'ce', '<Plug>GitstatusCommitNoedit', {})
-	api.nvim_buf_set_keymap(buffer, 'n', 'i', '<Plug>GitstatusIgnor', {})
-	api.nvim_buf_set_keymap(buffer, 'n', 'r', '<Plug>GitstatusRemov', {})
+	api.nvim_buf_set_keymap(buffer, 'n', 'a', '<Plug>GhubviousStage', {})
+	api.nvim_buf_set_keymap(buffer, 'n', 'u', '<Plug>GhubviousUnstage', {})
+	api.nvim_buf_set_keymap(buffer, 'n', 'c', '<Plug>GhubviousCommit', {})
+	--api.nvim_buf_set_keymap(buffer, 'n', 'ca', '<Plug>ghubviousCommitAmend', {})
+	--api.nvim_buf_set_keymap(buffer, 'n', 'ce', '<Plug>ghubviousCommitNoedit', {})
+	api.nvim_buf_set_keymap(buffer, 'n', 'i', '<Plug>GhubviousIgnor', {})
+	api.nvim_buf_set_keymap(buffer, 'n', 'r', '<Plug>GhubviousRemov', {})
 end
 
 local function create_border(win_height, win_width)
@@ -94,7 +94,7 @@ function window.open()
 	api.nvim_open_win(border, true, opts.border)
 	current = api.nvim_open_win(buffer, true, opts.main)
 	api.nvim_command('au BufWipeout <buffer> exe "silent bwipeout! "'..border)
-	api.nvim_command('au BufWipeout <buffer> :silent lua require\'gitstatus\'.restore()')
+	api.nvim_command('au BufWipeout <buffer> :silent lua require\'ghubvious\'.restore()')
 
 	--highlight current line
 	api.nvim_win_set_option(current, 'cursorline', true)

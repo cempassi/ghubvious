@@ -1,4 +1,6 @@
-# gitstatus.lua
+# Ghubvious
+
+Ghubvious is the obvious implementation of an interactive "git status" for Neovim.
 
 ## Table of contents
 
@@ -8,7 +10,13 @@
 
 ## General info
 
-gitstatus.lua is a neovim plugin to make the "git status" command interactive via a floating window.
+Ghubvious is a neovim plugin to make the "git status" command interactive via a floating window.
+
+My goals for this plugin are the following:
+
+ 1. Quick commands on selected files (git add | restore | ignore | remove).
+ 1. Quick commands on the commits of a single file (Jump between versions, checkout).
+ 1. Integration with the gh cli.
 
 ![Gitstatus.lua demo](./demo/Gitstatus.gif)
 
@@ -17,7 +25,8 @@ gitstatus.lua is a neovim plugin to make the "git status" command interactive vi
 This project is created with:
 
 - Lua
-- Vimscript
+
+I'd like to rely as little as possible on Vimscript.
 
 ## Guides and documentation
 
@@ -38,4 +47,3 @@ now, this project requires this other plugins to work:
 ## Setup
 
 To run this project, install it using your favorite git plugin manager.
-
