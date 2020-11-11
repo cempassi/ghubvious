@@ -34,6 +34,7 @@ function job.start(command, args, action, ...)
 		stdout:close()
 		stderr:close()
 		handle:close()
+		print("Job finished successfully")
 		if action ~= nil then action(unpack(cmdargs)) end
 	end
 	)
@@ -59,7 +60,7 @@ end
 function job.run(command, args)
 	local function writemsg()
 		for _, values in pairs(lines) do
-			vim.api.nvim_out_write(values)
+			vim.api.nvim_out_write(values .. '\n')
 		end
 		print(vim.inspect(lines))
 		local count = #lines

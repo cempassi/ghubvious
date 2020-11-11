@@ -4,10 +4,6 @@ if exists('g:loaded_ghubvious') | finish | endif " prevent loading file twice
 let s:save_cpo = &cpo " save user coptions
 set cpo&vim " reset them to defaults
 
-augroup ghubvious
-	autocmd!
-augroup END
-
 nnoremap <Plug>Ghubvious 	:lua require'ghubvious'.ghubvious()<cr>
 nnoremap <Plug>GhubviousToggle 	:lua require'ghubvious'.toggle()<cr>
 
