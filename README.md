@@ -38,3 +38,4 @@ now, this project requires this other plugins to work:
 ## Setup
 
 To run this project, install it using your favorite git plugin manager.
+
