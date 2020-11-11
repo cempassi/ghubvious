@@ -32,7 +32,7 @@ end
 function gitstatus.gitstatus()
 	save_previous()
 	window.open()
-	job.display({'status'})
+	job.display('git', {'status'})
 end
 
 function gitstatus.update()
@@ -48,7 +48,7 @@ function gitstatus.toggle()
 	else
 		save_previous()
 		window.open()
-		job.display({'status'})
+		job.display('git', {'status'})
 	end
 end
 

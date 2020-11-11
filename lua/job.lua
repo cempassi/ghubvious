@@ -21,11 +21,11 @@ local function onread(error, data)
 	end
 end
 
-function job.start(args, action, ...)
+function job.start(command, args, action, ...)
 	local stdout = vim.loop.new_pipe(false)
 	local stderr = vim.loop.new_pipe(false)
 	local cmdargs = {...}
-	handle = vim.loop.spawn('git',{
+	handle = vim.loop.spawn(command,{
 		args = args,
 		stdio = {stdout, stderr},
 		env = {
@@ -56,20 +56,20 @@ function job.history()
 	end
 end
 
-function job.display(command)
-	job.start(command, window.update, 0, lines)
+function job.display(command, args)
+	job.start(command, args, window.update, 0, lines)
 end
 
-function job.run(command)
+function job.run(command, args)
 	local function writemsg()
 		for _, values in pairs(lines) do
 			vim.api.nvim_out_write(values)
 		end
 		local count = #lines
 		for i=0, count do lines[i] = nil end
-		job.display({'status'})
+		job.display("git", {'status'})
 	end
-	job.start(command, writemsg)
+	job.start(command, args, writemsg)
 	history.update(command)
 end
 

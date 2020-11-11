@@ -20,9 +20,9 @@ function commands.stage()
 	local file = fn.expand("<cWORD>")
 	local line = api.nvim_get_current_line()
 	if validate_path(file) == true then
-		job.run({"add", file})
+		job.run("git", {"add", file})
 	elseif fn.match(line, "supprimé") ~= -1 then
-		job.run({"add", file})
+		job.run("git", {"add", file})
 	end
 end
 
@@ -30,7 +30,7 @@ function commands.unstage()
 	api.nvim_command("normal! $")
 	local file = fn.expand("<cWORD>")
 	if validate_path(file) == true then
-		job.run({"restore", "--staged", file})
+		job.run("git", {"restore", "--staged", file})
 		api.nvim_command("noh")
 	end
 end
@@ -38,9 +38,8 @@ end
 function commands.ignore()
 	api.nvim_command("normal! $")
 	local file = fn.expand("<cWORD>")
-	local append = "echo " .. file .. " >> .gitignore"
 	if (validate_path(file) == true and validate_path(".gitignore")) or validate_path(".git") then
-		job.send(append)
+		job.run("echo", {file, ">>", ".gitignore"})
 		api.nvim_command("noh")
 	else
 		print("Ignore only works in root directory")
@@ -52,7 +51,7 @@ function commands.remove()
 	local file = fn.expand("<cWORD>")
 	if validate_path(file) == true then
 		print("Trying to remove: " .. file)
-		job.run({"rm", "-f", file})
+		job.run("git", {"rm", "-f", file})
 		api.nvim_command("noh")
 	end
 end
@@ -66,7 +65,7 @@ function commands.commit(opt)
 		table.insert(cmd, "--amend")
 		table.insert(cmd, "--no-edit")
 	end
-	job.run(cmd)
+	job.run("git", cmd)
 end
 
 return commands
