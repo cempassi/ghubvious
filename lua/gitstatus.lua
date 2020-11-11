@@ -18,6 +18,7 @@ local function merge_packages()
 	return gitstatus
 end
 
+-- Save current cursor position for further use
 local function save_previous()
 	previous_window = api.nvim_get_current_win()
 	previous_cursor = api.nvim_win_get_cursor(previous_window)
@@ -33,13 +34,6 @@ function gitstatus.gitstatus()
 	save_previous()
 	window.open()
 	job.display('git', {'status'})
-end
-
-function gitstatus.update()
-	window.update(0)
-end
-function gitstatus.echo()
-	api.nvim_command('echo "It is working!"')
 end
 
 function gitstatus.toggle()

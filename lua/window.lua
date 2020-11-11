@@ -18,7 +18,7 @@ local function create_buffer()
 	local mappingOpts = {noremap = true, silent = true }
 	api.nvim_buf_set_keymap(buffer, 'n', '<Plug>GitstatusStage', ':lua require\'gitstatus\'.stage()<cr>', mappingOpts)
 	api.nvim_buf_set_keymap(buffer, 'n', '<Plug>GitstatusUnstage', ':lua require\'gitstatus\'.unstage()<cr>', mappingOpts)
-	api.nvim_buf_set_keymap(buffer, 'n', '<Plug>GitstatusCommit', ':lua require\'gitstatus\'.commit("")<cr>', mappingOpts)
+	api.nvim_buf_set_keymap(buffer, 'n', '<Plug>GitstatusCommit', ':lua require\'gitstatus\'.commit()<cr>', mappingOpts)
 	api.nvim_buf_set_keymap(buffer, 'n', '<Plug>GitstatusCommitAmend', ':lua require\'gitstatus\'.commit("amend")<cr>', mappingOpts)
 	api.nvim_buf_set_keymap(buffer, 'n', '<Plug>GitstatusCommitNoedit', ':lua require\'gitstatus\'.commit("noedit")<cr>', mappingOpts)
 	api.nvim_buf_set_keymap(buffer, 'n', '<Plug>GitstatusIgnore', ':lua require\'gitstatus\'.ignore()<cr>', mappingOpts)
@@ -27,9 +27,9 @@ local function create_buffer()
 
 	api.nvim_buf_set_keymap(buffer, 'n', 'a', '<Plug>GitstatusStage', {})
 	api.nvim_buf_set_keymap(buffer, 'n', 'u', '<Plug>GitstatusUnstage', {})
-	api.nvim_buf_set_keymap(buffer, 'n', 'cm', '<Plug>GitstatusCommit', {})
-	api.nvim_buf_set_keymap(buffer, 'n', 'ca', '<Plug>GitstatusCommitAmend', {})
-	api.nvim_buf_set_keymap(buffer, 'n', 'ce', '<Plug>GitstatusCommitNoedit', {})
+	api.nvim_buf_set_keymap(buffer, 'n', 'c', '<Plug>GitstatusCommit', {})
+	--api.nvim_buf_set_keymap(buffer, 'n', 'ca', '<Plug>GitstatusCommitAmend', {})
+	--api.nvim_buf_set_keymap(buffer, 'n', 'ce', '<Plug>GitstatusCommitNoedit', {})
 	api.nvim_buf_set_keymap(buffer, 'n', 'i', '<Plug>GitstatusIgnor', {})
 	api.nvim_buf_set_keymap(buffer, 'n', 'r', '<Plug>GitstatusRemov', {})
 end
@@ -102,29 +102,33 @@ function window.open()
 end
 
 function window.update(direction, lines)
-	position = position + direction
-	cursor = api.nvim_win_get_cursor(window)
-	if position < 0 then position = 0 end
+	if api.nvim_buf_is_loaded(buffer) == false then
+		local count = #lines
+		for i=0, count do lines[i] = nil end
+	else
+		position = position + direction
+		cursor = api.nvim_win_get_cursor(window)
+		if position < 0 then position = 0 end
 
-	--set file as modifiable
-	api.nvim_buf_set_option(buffer, 'modifiable', true)
+		--set file as modifiable
+		api.nvim_buf_set_option(buffer, 'modifiable', true)
 
-	-- with small indentation results will look better
-	-- for k, v in pairs(lines) do
-	-- 	lines[k] = '  ' .. lines[k]
-	-- end
+		-- with small indentation results will look better
+		-- for k, v in pairs(lines) do
+		-- 	lines[k] = '  ' .. lines[k]
+		-- end
 
-	api.nvim_buf_set_lines(buffer, 0, -1, false, lines)
-	local count = #lines
-	for i=0, count do lines[i] = nil end
-	api.nvim_command('g/(.*/d')
-	api.nvim_command("noh")
-	api.nvim_command("normal! zR")
+		api.nvim_buf_set_lines(buffer, 0, -1, false, lines)
+		local count = #lines
+		for i=0, count do lines[i] = nil end
+		api.nvim_command('g/(.*/d')
+		api.nvim_command("noh")
+		api.nvim_command("normal! zR")
 
-	--set file as non modifiable
-	api.nvim_buf_set_option(buffer, 'modifiable', false)
-	api.nvim_win_set_cursor(current, cursor)
-	api.nvim_command("")
+		--set file as non modifiable
+		api.nvim_buf_set_option(buffer, 'modifiable', false)
+		api.nvim_win_set_cursor(current, cursor)
+	end
 end
 
 function window.close()

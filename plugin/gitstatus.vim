@@ -6,12 +6,11 @@ set cpo&vim " reset them to defaults
 
 augroup gitstatus
 	autocmd!
-	autocmd FileType gitcommit,gitrebase,gitconfig set bufhidden=delete
 augroup END
 
 nnoremap <Plug>GitstatusOpen 	:lua require'gitstatus'.gitstatus()<cr>
 nnoremap <Plug>GitstatusToggle 	:lua require'gitstatus'.toggle()<cr>
-
+autocmd FileType gitcommit,gitrebase,gitconfig set bufhidden=delete
 map <leader>gg <Plug>GitstatusToggle
 
 "Explicit plugin reload, for development

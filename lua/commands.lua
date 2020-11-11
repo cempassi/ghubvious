@@ -56,16 +56,16 @@ function commands.remove()
 	end
 end
 
-function commands.commit(opt)
+function commands.commit()
 	window.close()
-	local cmd = {"commit"}
-	if opt == "amend" then
-		table.insert(cmd, "--amend")
-	elseif cmd == "noedit" then
-		table.insert(cmd, "--amend")
-		table.insert(cmd, "--no-edit")
-	end
-	job.run("git", cmd)
+	--local cmd = {"commit"}
+	-- if opt == "amend" then
+	-- 	table.insert(cmd, "--amend")
+	-- elseif cmd == "noedit" then
+	-- 	table.insert(cmd, "--amend")
+	-- 	table.insert(cmd, "--no-edit")
+	-- end
+	job.run("git", {"commit"})
 end
 
 return commands

@@ -13,8 +13,6 @@ local function append(data)
 end
 
 local function onread(error, data)
-	print(type(error))
-	print(data)
 	assert(not error, error)
 	if data then
 		append(data)
@@ -25,12 +23,10 @@ function job.start(command, args, action, ...)
 	local stdout = vim.loop.new_pipe(false)
 	local stderr = vim.loop.new_pipe(false)
 	local cmdargs = {...}
+	vim.env.GIT_EDITOR = [[nvr -cc 'bo split' --remote-wait]]
 	handle = vim.loop.spawn(command,{
 		args = args,
 		stdio = {stdout, stderr},
-		env = {
-			GIT_EDITOR = [[nvr -cc split --remote-wait]]
-		}
 	},
 	vim.schedule_wrap(function()
 		stdout:read_stop()
@@ -38,6 +34,7 @@ function job.start(command, args, action, ...)
 		stdout:close()
 		stderr:close()
 		handle:close()
+		print("J'ai deja quité")
 		if action ~= nil then action(unpack(cmdargs)) end
 	end
 	)
@@ -65,6 +62,7 @@ function job.run(command, args)
 		for _, values in pairs(lines) do
 			vim.api.nvim_out_write(values)
 		end
+		print(vim.inspect(lines))
 		local count = #lines
 		for i=0, count do lines[i] = nil end
 		job.display("git", {'status'})
