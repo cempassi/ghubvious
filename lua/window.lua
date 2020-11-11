@@ -1,7 +1,5 @@
 local window = {}
-local job = require('job')
 local api = vim.api
-local fn = vim.fn
 local current, buffer, border, cursor
 local position = 0
 
@@ -103,7 +101,7 @@ function window.open()
 	api.nvim_win_set_option(current, "winhighlight", "NormalFloat:Normal")
 end
 
-function window.update(direction)
+function window.update(direction, lines)
 	position = position + direction
 	cursor = api.nvim_win_get_cursor(window)
 	if position < 0 then position = 0 end
@@ -111,17 +109,14 @@ function window.update(direction)
 	--set file as modifiable
 	api.nvim_buf_set_option(buffer, 'modifiable', true)
 
-	-- we will use vim systemlist function which run shell
-	-- command and return result as list
-	local lines = job.capture('git status')
-
 	-- with small indentation results will look better
 	-- for k, v in pairs(lines) do
 	-- 	lines[k] = '  ' .. lines[k]
 	-- end
 
 	api.nvim_buf_set_lines(buffer, 0, -1, false, lines)
-	lines = nil
+	local count = #lines
+	for i=0, count do lines[i] = nil end
 	api.nvim_command('g/(.*/d')
 	api.nvim_command("noh")
 	api.nvim_command("normal! zR")
@@ -133,7 +128,6 @@ function window.update(direction)
 end
 
 function window.close()
-	job.stop()
 	api.nvim_win_close(window, true)
 end
 

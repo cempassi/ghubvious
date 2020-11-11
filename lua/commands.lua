@@ -20,9 +20,9 @@ function commands.stage()
 	local file = fn.expand("<cWORD>")
 	local line = api.nvim_get_current_line()
 	if validate_path(file) == true then
-		job.send("git add " .. file)
+		job.run({"add", file})
 	elseif fn.match(line, "supprimé") ~= -1 then
-		job.send("git add " .. file)
+		job.run({"add", file})
 	end
 end
 
@@ -30,7 +30,7 @@ function commands.unstage()
 	api.nvim_command("normal! $")
 	local file = fn.expand("<cWORD>")
 	if validate_path(file) == true then
-		job.send("git restore --staged "..file)
+		job.run({"restore", "--staged", file})
 		api.nvim_command("noh")
 	end
 end
@@ -52,21 +52,21 @@ function commands.remove()
 	local file = fn.expand("<cWORD>")
 	if validate_path(file) == true then
 		print("Trying to remove: " .. file)
-		job.send("git rm -f "..file)
+		job.run({"rm", "-f", file})
 		api.nvim_command("noh")
 	end
 end
 
 function commands.commit(opt)
-	local escape = [[nvr --remote-send '<c-\><c-N><c-w><c-p>:q<cr>:q<cr>' ]]
-	local cmd = [[git commit ]]
+	window.close()
+	local cmd = {"commit"}
 	if opt == "amend" then
-		cmd = cmd .. "--amend "
+		table.insert(cmd, "--amend")
 	elseif cmd == "noedit" then
-		cmd = cmd .. "--amend --no-edit"
+		table.insert(cmd, "--amend")
+		table.insert(cmd, "--no-edit")
 	end
-	job.report(escape .. " && " .. cmd)
-	-- window.background()
+	job.run(cmd)
 end
 
 return commands

@@ -1,5 +1,6 @@
 local commands = require('commands')
 local window = require('window')
+local job = require('job')
 
 local gitstatus = {}
 gitstatus.job = require('job')
@@ -31,7 +32,7 @@ end
 function gitstatus.gitstatus()
 	save_previous()
 	window.open()
-	window.update(0)
+	job.display({'status'})
 end
 
 function gitstatus.update()
@@ -47,7 +48,7 @@ function gitstatus.toggle()
 	else
 		save_previous()
 		window.open()
-		window.update(0)
+		job.display({'status'})
 	end
 end
 
