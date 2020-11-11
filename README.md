@@ -14,10 +14,19 @@ gitstatus.lua is a neovim plugin to make the "git status" command interactive vi
 
 ## Technologies
 
-Project is created with:
+This project is created with:
 
 - Lua
 - Vimscript
+
+## Guides and documentation
+
+- [Neovim Lua documentation](https://neovim.io/doc/user/lua.html)
+- [Luv documentation](https://github.com/luvit/luv/blob/master/docs.md)
+- [Lua 5.1 Reference Manual](https://www.lua.org/manual/5.1/)
+- [Using LibUV in Neovim](https://teukka.tech/vimloop.html)
+- [Lua guide by nanotee](https://github.com/nanotee/nvim-lua-guide#introduction)
+
 
 ## Depedencies
 
