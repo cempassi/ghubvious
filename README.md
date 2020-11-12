@@ -31,11 +31,11 @@ I'd like to rely as little as possible on Vimscript.
 ## Guides and documentation
 
 - [Neovim Lua documentation](https://neovim.io/doc/user/lua.html)
+- [Git status documentation](https://git-scm.com/docs/git-status)
 - [Luv documentation](https://github.com/luvit/luv/blob/master/docs.md)
 - [Lua 5.1 Reference Manual](https://www.lua.org/manual/5.1/)
 - [Using LibUV in Neovim](https://teukka.tech/vimloop.html)
 - [Lua guide by nanotee](https://github.com/nanotee/nvim-lua-guide#introduction)
-
 
 ## Depedencies
 
