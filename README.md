@@ -1,3 +1,6 @@
+---
+__NOTE:__ This repository is unmaintained - I prefer to help extend [Telescope.nvim](https://github.com/nvim-telescope/telescope.nvim)'s git integration
+---
 # Ghubvious
 
 Ghubvious is the obvious implementation of an interactive "git status" for Neovim.
@@ -6,6 +9,8 @@ Ghubvious is the obvious implementation of an interactive "git status" for Neovi
 
 - [General info](#general-info)
 - [Technologies](#technologies)
+- [Guides and documentation](#guides-and-documentation)
+- [Dependencies](#dependencies)
 - [Setup](#setup)
 
 ## General info
