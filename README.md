@@ -1,5 +1,5 @@
 ---
-__NOTE:__ This repository is unmaintained - I prefer to help extend [Telescope.nvim](https://github.com/nvim-telescope/telescope.nvim)'s git integration
+__NOTE:__ This repository is unmaintained 
 ---
 # Ghubvious
 
